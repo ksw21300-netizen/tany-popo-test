@@ -4,17 +4,31 @@
     --text-color: #5d4037;
     --accent-color: #8d6e63;
     --gold: #ffd700;
+    --tile-bg: #e0d5c1;
+    --tile-revealed: white;
+    --body-bg: #2c2c2c;
+}
+
+body.dark-mode {
+    --parchment-bg: #2c2c2c;
+    --parchment-dark: #1a1a1a;
+    --text-color: #e4e6eb;
+    --accent-color: #a0a0a0;
+    --tile-bg: #3a3b3c;
+    --tile-revealed: #242526;
+    --body-bg: #18191a;
 }
 
 body {
     margin: 0;
     font-family: 'Pretendard', sans-serif;
-    background-color: #2c2c2c;
+    background-color: var(--body-bg);
     color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .game-container {
@@ -67,7 +81,7 @@ h1 {
 }
 
 .diff-btn {
-    background: white;
+    background: var(--tile-revealed);
     border: 2px solid var(--parchment-dark);
     padding: 20px;
     border-radius: 12px;
@@ -76,6 +90,7 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: var(--text-color);
 }
 
 .diff-btn:hover {
@@ -121,6 +136,10 @@ h1 {
     color: #a0522d;
 }
 
+body.dark-mode .info-item .value {
+    color: var(--gold);
+}
+
 .grid {
     display: grid;
     gap: 8px;
@@ -130,7 +149,7 @@ h1 {
 
 .tile {
     aspect-ratio: 1/1;
-    background: #e0d5c1;
+    background: var(--tile-bg);
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 4px;
     cursor: pointer;
@@ -143,20 +162,20 @@ h1 {
 }
 
 .tile:hover:not(.revealed) {
-    background: #d4c4a8;
+    background: var(--parchment-dark);
     transform: scale(1.05);
 }
 
 .tile.revealed {
     cursor: default;
-    background: white;
+    background: var(--tile-revealed);
     box-shadow: none;
 }
 
-.tile.revealed.empty { background: #f0f0f0; opacity: 0.5; }
-.tile.revealed.coin { background: #fff9c4; animation: pop 0.3s ease; }
-.tile.revealed.gem { background: #e1f5fe; animation: pop 0.4s ease; border: 2px solid #03a9f4; }
-.tile.revealed.chest { background: #fff3e0; animation: bounce 0.5s ease; border: 2px solid #ff9800; font-size: 2rem; }
+.tile.revealed.empty { background: var(--tile-bg); opacity: 0.5; }
+.tile.revealed.coin { background: #fff9c4; animation: pop 0.3s ease; color: #333; }
+.tile.revealed.gem { background: #e1f5fe; animation: pop 0.4s ease; border: 2px solid #03a9f4; color: #333; }
+.tile.revealed.chest { background: #fff3e0; animation: bounce 0.5s ease; border: 2px solid #ff9800; font-size: 2rem; color: #333; }
 
 @keyframes pop {
     0% { transform: scale(0); }
@@ -200,6 +219,7 @@ h1 {
     border-radius: 20px;
     text-align: center;
     max-width: 300px;
+    color: var(--text-color);
 }
 
 .modal-content h2 { font-size: 2rem; margin-bottom: 20px; }

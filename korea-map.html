@@ -11,7 +11,10 @@
     <header class="page-header">
         <a href="index.html" class="back-link">← 돌아가기</a>
         <h1>🗺️ 한국 보물 찾기 지도</h1>
-        <div id="treasure-count" class="treasure-count">0 / 10</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
+            <div id="treasure-count" class="treasure-count">0 / 10</div>
+        </div>
     </header>
 
     <div class="score-bar">
@@ -256,6 +259,7 @@
         </div>
     </div>
 
+    <script src="theme.js"></script>
     <script src="korea-map.js"></script>
 </body>
 </html>

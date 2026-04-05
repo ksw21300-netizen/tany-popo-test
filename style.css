@@ -23,14 +23,18 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
     margin: 0;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
+    width: 100%;
+    max-width: 400px;
     text-align: center;
     background-color: var(--container-bg);
     padding: 40px;
@@ -38,6 +42,54 @@ body {
     box-shadow: 0 4px 12px var(--shadow);
     position: relative;
     transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: var(--container-bg);
+    color: var(--text-color);
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: none;
+}
+
+#submit-btn {
+    width: 100%;
+    background-color: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#submit-btn:hover {
+    background-color: var(--btn-hover);
 }
 
 h1 {

@@ -4,6 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
+    // Dinner menus
+    const menus = [
+        "Kimchi Stew", "Bulgogi", "Bibimbap", "Chicken", "Pizza", 
+        "Pasta", "Sushi", "Steak", "Samgyeopsal", "Tteokbokki",
+        "Jajangmyeon", "Sundae-guk", "Donkatsu", "Gimbap", "Curry"
+    ];
+
     // Theme logic
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
@@ -18,28 +25,22 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.textContent = isDark ? '☀️' : '🌙';
     });
 
-    const generateLottoNumbers = () => {
-        const numbers = new Set();
-        while (numbers.size < 6) {
-            const randomNumber = Math.floor(Math.random() * 45) + 1;
-            numbers.add(randomNumber);
-        }
-        return Array.from(numbers).sort((a, b) => a - b);
+    const getRandomMenu = () => {
+        const randomIndex = Math.floor(Math.random() * menus.length);
+        return menus[randomIndex];
     };
 
-    const displayNumber = (number) => {
-        const numberElement = document.createElement('div');
-        numberElement.classList.add('number');
-        numberElement.textContent = number;
-        numbersContainer.appendChild(numberElement);
+    const displayMenu = (menu) => {
+        const menuElement = document.createElement('div');
+        menuElement.classList.add('menu-item');
+        menuElement.textContent = menu;
+        numbersContainer.appendChild(menuElement);
     };
 
     generateBtn.addEventListener('click', () => {
         numbersContainer.innerHTML = '';
-        const lottoNumbers = generateLottoNumbers();
-        lottoNumbers.forEach(number => {
-            displayNumber(number);
-        });
+        const recommendedMenu = getRandomMenu();
+        displayMenu(recommendedMenu);
     });
 
     // Form submission logic

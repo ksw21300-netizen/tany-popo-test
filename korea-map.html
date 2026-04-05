@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗺️ 한국 보물 찾기 지도</title>
+    <link rel="stylesheet" href="korea-map.css">
+</head>
+<body>
+
+    <header class="page-header">
+        <a href="index.html" class="back-link">← 돌아가기</a>
+        <h1>🗺️ 한국 보물 찾기 지도</h1>
+        <div id="treasure-count" class="treasure-count">0 / 10</div>
+    </header>
+
+    <div class="score-bar">
+        <div class="score-item">
+            <span class="score-label">발견한 보물</span>
+            <span class="score-value" id="found-display">0</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">총 점수</span>
+            <span class="score-value" id="score-display">0</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">최고 기록</span>
+            <span class="score-value" id="high-score-display">0</span>
+        </div>
+    </div>
+
+    <div class="progress-dots" id="progress-dots"></div>
+
+    <div class="map-container">
+        <svg id="korea-map" viewBox="0 0 500 680" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                    <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="text-shadow">
+                    <feDropShadow dx="1" dy="1" stdDeviation="1.2" flood-color="rgba(0,0,0,0.7)"/>
+                </filter>
+                <filter id="land-shadow">
+                    <feDropShadow dx="3" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.4)"/>
+                </filter>
+                <linearGradient id="land-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#d9bc8a"/>
+                    <stop offset="40%" style="stop-color:#c8a870"/>
+                    <stop offset="100%" style="stop-color:#b5935a"/>
+                </linearGradient>
+                <linearGradient id="sea-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#4a8caa"/>
+                    <stop offset="100%" style="stop-color:#3a7090"/>
+                </linearGradient>
+                <pattern id="sea-pattern" x="0" y="0" width="40" height="14" patternUnits="userSpaceOnUse">
+                    <path d="M0,7 Q10,2 20,7 Q30,12 40,7" stroke="rgba(150,210,240,0.18)" stroke-width="1.2" fill="none"/>
+                </pattern>
+                <pattern id="land-texture" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                    <circle cx="4" cy="4" r="0.5" fill="rgba(100,70,30,0.08)"/>
+                </pattern>
+                <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+                    <stop offset="0%" style="stop-color:transparent"/>
+                    <stop offset="100%" style="stop-color:rgba(0,0,0,0.35)"/>
+                </radialGradient>
+            </defs>
+
+            <!-- Sea background -->
+            <rect width="500" height="680" fill="url(#sea-grad)"/>
+            <rect width="500" height="680" fill="url(#sea-pattern)"/>
+
+            <!-- Map border frame -->
+            <rect x="5" y="5" width="490" height="670" fill="none" stroke="#7a5a1a" stroke-width="3" rx="8"/>
+            <rect x="10" y="10" width="480" height="660" fill="none" stroke="#d4a84b" stroke-width="1.5" rx="5" stroke-dasharray="10,5"/>
+
+            <!-- Corner decorations -->
+            <text x="18" y="32" font-size="14" opacity="0.6" fill="#d4a84b">✦</text>
+            <text x="473" y="32" font-size="14" opacity="0.6" fill="#d4a84b">✦</text>
+            <text x="18" y="668" font-size="14" opacity="0.6" fill="#d4a84b">✦</text>
+            <text x="473" y="668" font-size="14" opacity="0.6" fill="#d4a84b">✦</text>
+
+            <!-- Map title -->
+            <text x="250" y="42" text-anchor="middle" font-size="17" font-weight="bold" fill="#ffd700" filter="url(#text-shadow)" font-family="serif" letter-spacing="2">大韓民國 寶物 地圖</text>
+            <text x="250" y="57" text-anchor="middle" font-size="9" fill="#c8a84b" font-style="italic" font-family="serif">✦ 전설의 보물을 찾아서 ✦</text>
+
+            <!-- Sea labels -->
+            <text x="42" y="370" font-size="9" fill="rgba(200,220,240,0.55)" font-style="italic" transform="rotate(-90,42,370)">서 해 (Yellow Sea)</text>
+            <text x="448" y="310" font-size="9" fill="rgba(200,220,240,0.55)" font-style="italic" transform="rotate(90,448,310)">동 해 (East Sea)</text>
+            <text x="220" y="522" font-size="9" fill="rgba(200,220,240,0.45)" font-style="italic">남 해 (South Sea)</text>
+
+            <!-- Decorative sea elements -->
+            <text x="32" y="190" font-size="22" opacity="0.55" transform="rotate(-10,32,190)">⛵</text>
+            <text x="430" y="460" font-size="18" opacity="0.45">🐋</text>
+            <text x="52" y="440" font-size="13" opacity="0.40">🐟</text>
+            <text x="450" y="180" font-size="12" opacity="0.35">🦈</text>
+            <text x="68" y="560" font-size="14" opacity="0.38">🐠</text>
+            <text x="415" y="370" font-size="11" opacity="0.35">🐡</text>
+
+            <!-- Korea Peninsula - main land mass -->
+            <path id="peninsula" d="
+                M 142, 92
+                C 162, 76 190, 67 226, 64
+                C 262, 61 298, 67 328, 78
+                L 362, 92
+                C 376, 114 378, 140 374, 168
+                C 370, 196 372, 226 368, 255
+                C 364, 284 366, 314 360, 342
+                C 354, 370 350, 400 342, 427
+                C 336, 450 320, 466 302, 474
+                C 278, 484 250, 482 224, 476
+                C 198, 470 178, 455 162, 440
+                C 146, 424 132, 402 120, 374
+                C 108, 346 104, 314 106, 284
+                C 108, 254 110, 224 106, 194
+                C 102, 164 110, 132 124, 110
+                Z
+            " fill="url(#land-grad)" stroke="#9a7040" stroke-width="2" filter="url(#land-shadow)"/>
+
+            <!-- Land texture overlay -->
+            <path d="
+                M 142, 92
+                C 162, 76 190, 67 226, 64
+                C 262, 61 298, 67 328, 78
+                L 362, 92
+                C 376, 114 378, 140 374, 168
+                C 370, 196 372, 226 368, 255
+                C 364, 284 366, 314 360, 342
+                C 354, 370 350, 400 342, 427
+                C 336, 450 320, 466 302, 474
+                C 278, 484 250, 482 224, 476
+                C 198, 470 178, 455 162, 440
+                C 146, 424 132, 402 120, 374
+                C 108, 346 104, 314 106, 284
+                C 108, 254 110, 224 106, 194
+                C 102, 164 110, 132 124, 110
+                Z
+            " fill="url(#land-texture)" opacity="0.5"/>
+
+            <!-- Small islands on west coast (Ganghwado area) -->
+            <ellipse cx="108" cy="200" rx="14" ry="18" fill="url(#land-grad)" stroke="#9a7040" stroke-width="1.2" filter="url(#land-shadow)"/>
+            <text x="90" y="225" font-size="6.5" fill="#7a5020" font-family="sans-serif">강화도</text>
+
+            <!-- Jeju Island -->
+            <ellipse cx="230" cy="562" rx="54" ry="27" fill="url(#land-grad)" stroke="#9a7040" stroke-width="1.5" filter="url(#land-shadow)"/>
+            <ellipse cx="230" cy="562" rx="54" ry="27" fill="url(#land-texture)" opacity="0.5"/>
+            <!-- Hallasan volcano icon on Jeju -->
+            <text x="221" y="568" font-size="11" fill="#8b6014" opacity="0.75">🌋</text>
+            <text x="200" y="582" font-size="6.5" fill="#7a5020" font-family="sans-serif">제 주 도</text>
+
+            <!-- Ulleungdo -->
+            <circle cx="420" cy="242" r="9" fill="url(#land-grad)" stroke="#9a7040" stroke-width="1.2"/>
+            <text x="412" y="258" font-size="6" fill="#7a5020" font-family="sans-serif">울릉도</text>
+
+            <!-- Dokdo -->
+            <circle cx="442" cy="272" r="4.5" fill="#c4a060" stroke="#9a7040" stroke-width="1"/>
+            <text x="435" y="283" font-size="5.5" fill="#7a5020" font-family="sans-serif">독도</text>
+
+            <!-- DMZ line -->
+            <line x1="140" y1="132" x2="362" y2="112" stroke="#cc2200" stroke-width="1.2" stroke-dasharray="5,3" opacity="0.55"/>
+            <text x="215" y="128" font-size="7" fill="#cc2200" opacity="0.6" font-family="sans-serif">— — — 휴전선 (DMZ) — — —</text>
+
+            <!-- Mountain decorations on land -->
+            <text x="166" y="152" font-size="9" fill="#7a5020" opacity="0.55">⛰</text>
+            <text x="346" y="148" font-size="9" fill="#7a5020" opacity="0.55">⛰</text>
+            <text x="228" y="205" font-size="8" fill="#7a5020" opacity="0.45">⛰</text>
+            <text x="292" y="300" font-size="8" fill="#7a5020" opacity="0.45">⛰</text>
+            <text x="190" y="375" font-size="7" fill="#7a5020" opacity="0.4">⛰</text>
+
+            <!-- River lines (Hangang, Nakdonggang - approximate) -->
+            <path d="M 190,188 Q 215,202 245,210 Q 268,215 285,225" stroke="#5a8aaa" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <path d="M 300,295 Q 310,330 318,365 Q 326,395 338,428" stroke="#5a8aaa" stroke-width="1.2" fill="none" opacity="0.45"/>
+
+            <!-- Vignette overlay -->
+            <rect width="500" height="680" fill="url(#vignette)" rx="8"/>
+
+            <!-- Compass Rose -->
+            <g transform="translate(62, 605)">
+                <circle cx="0" cy="0" r="32" fill="rgba(10,8,4,0.45)" stroke="#c8a84b" stroke-width="1.2"/>
+                <circle cx="0" cy="0" r="22" fill="none" stroke="#c8a84b" stroke-width="0.7" stroke-dasharray="3,3"/>
+                <!-- North pointer (red) -->
+                <polygon points="0,-24 -5,-8 5,-8" fill="#cc2200" opacity="0.9"/>
+                <!-- South pointer -->
+                <polygon points="0,24 -5,8 5,8" fill="#c8a84b" opacity="0.8"/>
+                <!-- East pointer -->
+                <polygon points="24,0 8,-5 8,5" fill="#c8a84b" opacity="0.8"/>
+                <!-- West pointer -->
+                <polygon points="-24,0 -8,-5 -8,5" fill="#c8a84b" opacity="0.8"/>
+                <circle cx="0" cy="0" r="4" fill="#c8a84b"/>
+                <text x="0" y="-28" text-anchor="middle" font-size="9" fill="#f0dca0" font-weight="bold" font-family="serif">N</text>
+                <text x="0" y="37" text-anchor="middle" font-size="9" fill="#c8a84b" font-family="serif">S</text>
+                <text x="30" y="3" font-size="9" fill="#c8a84b" font-family="serif">E</text>
+                <text x="-34" y="3" font-size="9" fill="#c8a84b" font-family="serif">W</text>
+            </g>
+
+            <!-- Scale bar -->
+            <g transform="translate(355, 618)">
+                <rect x="0" y="-6" width="90" height="12" rx="2" fill="rgba(10,8,4,0.4)"/>
+                <line x1="0" y1="0" x2="90" y2="0" stroke="#c8a84b" stroke-width="1.5"/>
+                <line x1="0" y1="-4" x2="0" y2="4" stroke="#c8a84b" stroke-width="1.5"/>
+                <line x1="45" y1="-3" x2="45" y2="3" stroke="#c8a84b" stroke-width="1"/>
+                <line x1="90" y1="-4" x2="90" y2="4" stroke="#c8a84b" stroke-width="1.5"/>
+                <text x="45" y="-9" text-anchor="middle" font-size="7.5" fill="#c8a84b" font-family="sans-serif">100 km</text>
+                <text x="0" y="12" text-anchor="middle" font-size="6" fill="#a08030" font-family="sans-serif">0</text>
+                <text x="90" y="12" text-anchor="middle" font-size="6" fill="#a08030" font-family="sans-serif">200</text>
+            </g>
+
+            <!-- Legend -->
+            <g transform="translate(358, 75)">
+                <rect x="-4" y="-14" width="130" height="52" rx="4" fill="rgba(10,8,4,0.5)" stroke="#c8a84b" stroke-width="0.8"/>
+                <circle cx="6" cy="0" r="6" fill="#ffd700" stroke="white" stroke-width="1"/>
+                <text x="6" y="4" text-anchor="middle" font-size="8" fill="white" font-weight="bold">✕</text>
+                <text x="16" y="4" font-size="8.5" fill="#f0dca0" font-family="sans-serif"> 미발견 보물</text>
+                <circle cx="6" cy="18" r="6" fill="#2e7d32" stroke="#81c784" stroke-width="1"/>
+                <text x="6" y="22" text-anchor="middle" font-size="8" fill="white" font-weight="bold">✓</text>
+                <text x="16" y="22" font-size="8.5" fill="#f0dca0" font-family="sans-serif"> 발견 완료</text>
+            </g>
+
+            <!-- Treasure Markers (injected by JS) -->
+            <g id="treasure-markers"></g>
+        </svg>
+    </div>
+
+    <!-- Popup Overlay -->
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup">
+            <div class="popup-header">
+                <div>
+                    <div class="popup-location-name" id="popup-name">경복궁</div>
+                    <div class="popup-subtitle" id="popup-subtitle">서울특별시</div>
+                </div>
+                <div id="popup-badge" class="discovered-badge hidden">✓ 발견됨</div>
+            </div>
+
+            <div class="popup-clue" id="popup-clue">단서 텍스트가 여기에 표시됩니다.</div>
+
+            <div id="treasure-reveal" class="treasure-reveal hidden">
+                <span class="reveal-emoji" id="reveal-emoji">💎</span>
+                <div class="reveal-name" id="reveal-name">보물 이름</div>
+                <div class="reveal-points" id="reveal-points">+100점 획득!</div>
+            </div>
+
+            <button class="popup-btn btn-primary" id="explore-btn">⚔️ 탐험하기!</button>
+            <button class="popup-btn btn-secondary" id="close-btn">✕ 닫기</button>
+        </div>
+    </div>
+
+    <!-- Victory Overlay -->
+    <div class="victory-overlay" id="victory-overlay">
+        <div class="victory-box">
+            <div class="victory-crown">🏆</div>
+            <h2>모든 보물 발견!</h2>
+            <p>대한민국 전역의 10가지 전설적인 보물을 모두 찾아냈습니다.<br>당신은 진정한 보물 사냥꾼입니다!</p>
+            <div class="victory-treasures" id="victory-treasures"></div>
+            <div class="victory-score">최종 점수: <span id="victory-score">0</span>점</div>
+            <button class="popup-btn btn-primary" id="restart-btn">🗺️ 다시 탐험하기</button>
+        </div>
+    </div>
+
+    <script src="korea-map.js"></script>
+</body>
+</html>

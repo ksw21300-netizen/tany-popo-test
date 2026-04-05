@@ -2,14 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generate-btn');
     const numbersContainer = document.getElementById('numbers-container');
     const themeToggle = document.getElementById('theme-toggle');
+    const categoryBtns = document.querySelectorAll('.category-btn');
     const body = document.body;
 
-    // Dinner menus
-    const menus = [
-        "Kimchi Stew", "Bulgogi", "Bibimbap", "Chicken", "Pizza", 
-        "Pasta", "Sushi", "Steak", "Samgyeopsal", "Tteokbokki",
-        "Jajangmyeon", "Sundae-guk", "Donkatsu", "Gimbap", "Curry"
-    ];
+    // Categorized menus
+    const menuData = {
+        korean: ["김치찌개", "된장찌개", "불고기", "비빔밥", "삼겹살", "제육볶음", "국밥", "닭갈비", "보쌈", "비빔냉면"],
+        japanese: ["초밥", "라멘", "돈카츠", "규동", "우동", "소바", "텐동", "사케동", "가츠동"],
+        chinese: ["짜장면", "짬뽕", "탕수육", "마라탕", "꿔바로우", "볶음밥", "양꼬치", "마파두부"],
+        western: ["파스타", "피자", "스테이크", "햄버거", "샐러드", "리조또", "샌드위치", "오므라이스"],
+        snack: ["떡볶이", "김밥", "치킨", "족발", "튀김", "라면", "순대", "핫도그"]
+    };
+
+    let currentCategory = 'all';
 
     // Theme logic
     const savedTheme = localStorage.getItem('theme');
@@ -25,15 +30,36 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.textContent = isDark ? '☀️' : '🌙';
     });
 
+    // Category selection logic
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.dataset.category;
+        });
+    });
+
     const getRandomMenu = () => {
-        const randomIndex = Math.floor(Math.random() * menus.length);
-        return menus[randomIndex];
+        let availableMenus = [];
+        if (currentCategory === 'all') {
+            Object.values(menuData).forEach(categoryMenus => {
+                availableMenus = availableMenus.concat(categoryMenus);
+            });
+        } else {
+            availableMenus = menuData[currentCategory];
+        }
+        
+        const randomIndex = Math.floor(Math.random() * availableMenus.length);
+        return availableMenus[randomIndex];
     };
 
-    const displayMenu = (menu) => {
+    const displayMenu = (menu, isFinal = false) => {
         numbersContainer.innerHTML = '';
         const menuElement = document.createElement('div');
         menuElement.classList.add('menu-item');
+        if (!isFinal) {
+            menuElement.classList.add('spinning');
+        }
         menuElement.textContent = menu;
         numbersContainer.appendChild(menuElement);
     };
@@ -41,16 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', () => {
         generateBtn.disabled = true;
         let count = 0;
+        const totalSteps = 15;
+        
         const interval = setInterval(() => {
             displayMenu(getRandomMenu());
             count++;
-            if (count > 10) {
+            if (count >= totalSteps) {
                 clearInterval(interval);
                 const finalMenu = getRandomMenu();
-                displayMenu(finalMenu);
+                displayMenu(finalMenu, true);
                 generateBtn.disabled = false;
             }
-        }, 100);
+        }, 80);
     });
 
     // Form submission logic

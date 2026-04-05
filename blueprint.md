@@ -1,23 +1,27 @@
-# Dinner Menu Recommendation
+# 오늘 뭐 먹지? (오늘의 메뉴 추천)
 
-## Overview
+## 개요
 
-This project is a simple web application that recommends a random dinner menu from a predefined list. The application provides a clean, user-friendly interface with a button to get a new recommendation.
+이 프로젝트는 결정 장애가 있는 사용자를 위해 오늘 먹을 메뉴를 무작위로 추천해주는 간단한 웹 애플리케이션입니다. 깔끔하고 직관적인 인터페이스를 제공하며, 카테고리별 필터링 기능을 통해 원하는 종류의 음식을 추천받을 수 있습니다.
 
-## Features
+## 주요 기능
 
-*   Recommend a random dinner menu from a list.
-*   Display the recommended menu in a visually appealing way.
-*   Dark/Light mode support.
-*   Contact form for inquiries.
-*   Responsive design that works on different screen sizes.
+*   **카테고리별 메뉴 추천**: 한식, 일식, 중식, 양식, 분식 등 원하는 카테고리를 선택하여 추천받을 수 있습니다.
+*   **애니메이션 효과**: 메뉴가 결정되기 전 룰렛과 같은 셔플 애니메이션을 통해 시각적 재미를 더했습니다.
+*   **다크 모드 지원**: 사용자의 환경에 맞춰 라이트/다크 모드를 전환할 수 있습니다.
+*   **제휴 문의 폼**: 서비스 관련 문의를 보낼 수 있는 연락처 폼이 포함되어 있습니다.
+*   **반응형 디자인**: 모바일과 데스크탑 등 다양한 화면 크기에 최적화되어 있습니다.
 
-## Project Structure
+## 프로젝트 구조
 
-*   `index.html`: The main HTML file.
-*   `style.css`: The CSS file for styling.
-*   `main.js`: The JavaScript file for the application logic.
+*   `index.html`: UI 구조 및 메타데이터 정의.
+*   `style.css`: 디자인 및 애니메이션 스타일링 (Pretendard 폰트 적용).
+*   `main.js`: 메뉴 데이터 및 추천 로직, 다크 모드 제어.
 
-## Deployment
+## 메뉴 데이터 구성
 
-*   The site is hosted on GitHub Pages: [https://ksw21300-netizen.github.io/product-bullder-test/](https://ksw21300-netizen.github.io/product-bullder-test/)
+*   **한식**: 김치찌개, 된장찌개, 불고기, 삼겹살 등
+*   **일식**: 초밥, 라멘, 돈카츠, 텐동 등
+*   **중식**: 짜장면, 짬뽕, 마라탕, 탕수육 등
+*   **양식**: 파스타, 피자, 스테이크, 햄버거 등
+*   **분식/기타**: 떡볶이, 김밥, 치킨, 족발 등

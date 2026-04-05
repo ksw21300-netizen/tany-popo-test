@@ -1,21 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinner Menu Recommendation</title>
+    <title>오늘 뭐 먹지? - 메뉴 추천</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
-        <h1>Dinner Menu Recommendation</h1>
-        <button id="generate-btn">Recommend Menu</button>
-        <div id="numbers-container"></div>
+        <h1>오늘 뭐 먹지?</h1>
+        
+        <div class="category-container">
+            <button class="category-btn active" data-category="all">전체</button>
+            <button class="category-btn" data-category="korean">한식</button>
+            <button class="category-btn" data-category="japanese">일식</button>
+            <button class="category-btn" data-category="chinese">중식</button>
+            <button class="category-btn" data-category="western">양식</button>
+            <button class="category-btn" data-category="snack">분식/기타</button>
+        </div>
+
+        <button id="generate-btn">메뉴 추천받기</button>
+        <div id="numbers-container">
+            <div class="menu-item">버튼을 눌러보세요!</div>
+        </div>
     </div>
 
     <div class="container" style="margin-top: 40px;">
-        <h2>제휴 문의</h2>
+        <h2>제휴 및 문의</h2>
         <form action="https://formspree.io/f/xlgoopyo" method="POST" id="contact-form">
             <div class="form-group">
                 <label for="name">성함/업체명</label>
